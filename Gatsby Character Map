@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Gatsby: Relationship Mapper</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark-green: #013220;
+            --off-white: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--dark-green);
+            color: var(--off-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .character-bank {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--gold);
+        }
+
+        .character {
+            background-color: var(--gold);
+            color: black;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: grab;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .drop-zones {
+            flex: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .zone {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed var(--gold);
+            min-height: 150px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .zone:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .zone h3 {
+            margin-top: 0;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .analysis-box {
+            margin-top: 30px;
+            width: 90%;
+            max-width: 1000px;
+            background: var(--off-white);
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .active-analysis {
+            display: block;
+            border-left: 10px solid var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gatsby Relationship Web</h1>
+    <p>Drag the characters into the relationship dynamic they best represent.</p>
+
+    <div class="container">
+        <div class="character-bank" id="bank">
+            <div class="character" draggable="true" id="gatsby">Jay Gatsby</div>
+            <div class="character" draggable="true" id="daisy">Daisy Buchanan</div>
+            <div class="character" draggable="true" id="tom">Tom Buchanan</div>
+            <div class="character" draggable="true" id="nick">Nick Carraway</div>
+            <div class="character" draggable="true" id="myrtle">Myrtle Wilson</div>
+            <div class="character" draggable="true" id="jordan">Jordan Baker</div>
+        </div>
+
+        <div class="drop-zones">
+            <div class="zone" id="nostalgic" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>The Nostalgic (The Past)</h3>
+            </div>
+            <div class="zone" id="transactional" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>The Transactional (Status)</h3>
+            </div>
+            <div class="zone" id="observational" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>The Observational (Moral)</h3>
+            </div>
+            <div class="zone" id="destructive" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <h3>The Destructive (Chaos)</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="analysis" class="analysis-box">
+        <h2 id="analysis-title">Relationship Insight</h2>
+        <p id="analysis-text"></p>
+    </div>
+
+    <script>
+        const characters = document.querySelectorAll('.character');
+        const analysisBox = document.getElementById('analysis');
+        const analysisTitle = document.getElementById('analysis-title');
+        const analysisText = document.getElementById('analysis-text');
+
+        const insights = {
+            nostalgic: "You placed someone in Nostalgic. This mirrors Gatsby’s attempt to 'repeat the past.' This conflict highlights the impossibility of the American Dream once it has been corrupted by time.",
+            transactional: "Transactional relationships in the novel, like Tom and Myrtle's, demonstrate how the wealthy use the lower classes as disposable objects, emphasizing the theme of social stratification.",
+            observational: "This represents Nick’s role. By staying on the outside, he exposes the 'carelessness' of the elite, serving as the novel's moral compass.",
+            destructive: "Destructive ties lead to the 'Valley of Ashes'—literally and figuratively. This represents the fallout of the East Egg lifestyle."
+        };
+
+        characters.forEach(char => {
+            char.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData("text", e.target.id);
+            });
+        });
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const data = e.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+            const dropZone = e.target.closest('.zone');
+            
+            if (dropZone) {
+                dropZone.appendChild(draggedElement);
+                showAnalysis(dropZone.id);
+            }
+        }
+
+        function showAnalysis(zoneId) {
+            analysisBox.classList.add('active-analysis');
+            analysisTitle.innerText = document.getElementById(zoneId).querySelector('h3').innerText;
+            analysisText.innerText = insights[zoneId];
+        }
+    </script>
+</body>
+</html>
