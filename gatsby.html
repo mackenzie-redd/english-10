@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Gatsby: Character Dynamics Lesson</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gatsby-gold: #d4af37;
+            --gatsby-green: #2e5a40;
+            --gatsby-dark: #1a1a1a;
+            --gatsby-light: #f4f1ea;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--gatsby-light);
+            color: var(--gatsby-dark);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .art-deco-border {
+            border: 4px double var(--gatsby-gold);
+            position: relative;
+        }
+
+        .character-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .green-light {
+            width: 20px;
+            height: 20px;
+            background-color: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00ff00;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 30px #00ff00; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* Drag and Drop Styling */
+        .drop-zone {
+            border: 2px dashed #ccc;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .drop-zone.hover {
+            background: #f0ede4;
+            border-color: var(--gatsby-gold);
+        }
+        .draggable-item {
+            cursor: grab;
+            background: #1a1a1a;
+            color: #d4af37;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 4px;
+            font-size: 0.875rem;
+            display: inline-block;
+            user-select: none;
+        }
+        .draggable-item:active { cursor: grabbing; }
+        
+        .correct-match { background-color: #dcfce7 !important; border-color: #166534 !important; color: #166534 !important; border-style: solid !important; }
+        .wrong-match { background-color: #fee2e2 !important; border-color: #991b1b !important; border-style: solid !important; }
+
+        .matching-pair { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body class="p-0 m-0">
+
+    <!-- Header Section -->
+    <header class="bg-[#1a1a1a] text-[#d4af37] py-12 px-6 text-center border-b-4 border-[#d4af37]">
+        <h1 class="text-5xl md:text-7xl font-bold mb-4 uppercase tracking-widest text-balance">The Great Gatsby</h1>
+        <p class="text-xl md:text-2xl italic">An Interactive Exploration of Character Dynamics & Social Friction</p>
+        <div class="mt-8 flex justify-center items-center gap-4">
+            <span class="text-sm uppercase tracking-widest">Across the bay...</span>
+            <div class="green-light"></div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        
+        <!-- Introduction -->
+        <section class="mb-20 text-center">
+            <div class="art-deco-border p-8 bg-white shadow-xl max-w-3xl mx-auto">
+                <h2 class="text-3xl mb-4 text-emerald-900 font-bold uppercase">Welcome, Old Sport</h2>
+                <p class="text-lg leading-relaxed text-gray-700">
+                    Characters in West Egg and East Egg are defined by their relationships. Explore the profiles below, then test your knowledge with the interactive lab and simulators.
+                </p>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="map-section" class="mb-20">
+            <h2 class="text-4xl text-center mb-12 font-bold underline decoration-[#d4af37]">The Web of Relationships</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
+                <div class="character-card bg-white p-6 rounded-lg border-t-4 border-emerald-800 shadow-md" onclick="selectCharacter('gatsby')">
+                    <h3 class="text-2xl font-bold mb-2">Jay Gatsby</h3>
+                    <p class="text-sm text-emerald-700 uppercase font-bold mb-4">"New Money" Dreamer</p>
+                </div>
+                <div class="character-card bg-white p-6 rounded-lg border-t-4 border-yellow-500 shadow-md" onclick="selectCharacter('daisy')">
+                    <h3 class="text-2xl font-bold mb-2">Daisy Buchanan</h3>
+                    <p class="text-sm text-yellow-600 uppercase font-bold mb-4">The Golden Girl</p>
+                </div>
+                <div class="character-card bg-white p-6 rounded-lg border-t-4 border-red-800 shadow-md" onclick="selectCharacter('tom')">
+                    <h3 class="text-2xl font-bold mb-2">Tom Buchanan</h3>
+                    <p class="text-sm text-red-800 uppercase font-bold mb-4">"Old Money" Bully</p>
+                </div>
+                <div class="character-card bg-white p-6 rounded-lg border-t-4 border-blue-800 shadow-md" onclick="selectCharacter('nick')">
+                    <h3 class="text-2xl font-bold mb-2">Nick Carraway</h3>
+                    <p class="text-sm text-blue-800 uppercase font-bold mb-4">The Observer</p>
+                </div>
+                <div class="character-card bg-white p-6 rounded-lg border-t-4 border-gray-400 shadow-md" onclick="selectCharacter('jordan')">
+                    <h3 class="text-2xl font-bold mb-2">Jordan Baker</h3>
+                    <p class="text-sm text-gray-500 uppercase font-bold mb-4">The Modern Woman</p>
+                </div>
+                <div class="character-card bg-white p-6 rounded-lg border-t-4 border-orange-700 shadow-md" onclick="selectCharacter('myrtle')">
+                    <h3 class="text-2xl font-bold mb-2">Myrtle Wilson</h3>
+                    <p class="text-sm text-orange-700 uppercase font-bold mb-4">The Outsider</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Info -->
+            <div id="relationship-info" class="mt-8 p-8 bg-[#1a1a1a] text-white rounded-xl shadow-2xl min-h-[200px]">
+                <div id="info-placeholder" class="text-center italic text-gray-400 py-10">Select a card to view profile...</div>
+                <div id="info-content" class="hidden">
+                    <h4 id="char-name" class="text-3xl font-bold text-[#d4af37] mb-2"></h4>
+                    <p id="char-bio" class="text-gray-300 mb-6 italic border-l-4 border-[#d4af37] pl-4"></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h5 class="text-lg font-bold text-[#d4af37] mb-3">Dynamics</h5>
+                            <ul id="char-dynamics" class="space-y-2 text-sm list-disc pl-5 text-gray-200"></ul>
+                        </div>
+                        <div>
+                            <h5 class="text-lg font-bold text-[#d4af37] mb-3">Primary Conflict</h5>
+                            <p id="char-conflict" class="text-sm text-gray-200 bg-gray-800 p-3 rounded"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Activity: Relationship Laber -->
+        <section class="mb-20 bg-white p-10 rounded-lg shadow-lg border-t-8 border-[#d4af37]">
+            <h2 class="text-3xl font-bold mb-4">Activity 1: The Relationship Laber</h2>
+            <p class="mb-8 text-gray-600 italic">Drag the dynamic label to the correct character connection.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Drop Zones -->
+                <div class="space-y-6">
+                    <div class="matching-pair">
+                        <div class="w-1/2 text-sm font-bold">Gatsby → Daisy:</div>
+                        <div class="w-1/2 drop-zone p-2 rounded" data-answer="Idealized Obsession" id="drop-1">Drop here</div>
+                    </div>
+                    <div class="matching-pair">
+                        <div class="w-1/2 text-sm font-bold">Tom → Myrtle:</div>
+                        <div class="w-1/2 drop-zone p-2 rounded" data-answer="Exploitative Affair" id="drop-2">Drop here</div>
+                    </div>
+                    <div class="matching-pair">
+                        <div class="w-1/2 text-sm font-bold">Nick → Gatsby:</div>
+                        <div class="w-1/2 drop-zone p-2 rounded" data-answer="Repelled Admiration" id="drop-3">Drop here</div>
+                    </div>
+                    <div class="matching-pair">
+                        <div class="w-1/2 text-sm font-bold">Tom → Gatsby:</div>
+                        <div class="w-1/2 drop-zone p-2 rounded" data-answer="Class Hostility" id="drop-4">Drop here</div>
+                    </div>
+                </div>
+
+                <!-- Draggable Labels -->
+                <div class="bg-gray-100 p-6 rounded border border-gray-200">
+                    <h3 class="text-sm uppercase font-bold mb-4 text-gray-500">Labels</h3>
+                    <div id="label-container" class="flex flex-wrap gap-2">
+                        <div class="draggable-item" draggable="true" id="label-1">Idealized Obsession</div>
+                        <div class="draggable-item" draggable="true" id="label-2">Class Hostility</div>
+                        <div class="draggable-item" draggable="true" id="label-3">Exploitative Affair</div>
+                        <div class="draggable-item" draggable="true" id="label-4">Repelled Admiration</div>
+                    </div>
+                    <button onclick="checkLabels()" class="mt-8 w-full py-2 bg-emerald-800 text-white font-bold rounded hover:bg-emerald-900">Check Connections</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Activity: Trait Matcher -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold mb-6 text-center">Activity 2: Character Trait Matcher</h2>
+            <div class="bg-[#1a1a1a] text-white p-8 rounded-lg shadow-xl">
+                <div id="trait-game">
+                    <p class="mb-6 text-lg" id="trait-prompt">Which character is described as having <strong>"a voice full of money"</strong>?</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button onclick="matchTrait('Gatsby', false)" class="p-3 border border-[#d4af37] rounded hover:bg-[#d4af37] hover:text-black transition">Gatsby</button>
+                        <button onclick="matchTrait('Daisy', true)" class="p-3 border border-[#d4af37] rounded hover:bg-[#d4af37] hover:text-black transition">Daisy</button>
+                        <button onclick="matchTrait('Jordan', false)" class="p-3 border border-[#d4af37] rounded hover:bg-[#d4af37] hover:text-black transition">Jordan</button>
+                        <button onclick="matchTrait('Myrtle', false)" class="p-3 border border-[#d4af37] rounded hover:bg-[#d4af37] hover:text-black transition">Myrtle</button>
+                    </div>
+                    <div id="trait-feedback" class="mt-6 text-center h-6 font-bold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Tension Meter -->
+        <section class="mb-20 bg-white p-10 rounded-lg shadow-lg border-l-8 border-[#2e5a40]">
+            <h2 class="text-3xl font-bold mb-6">Interaction Simulator: "The Plaza Hotel Scene"</h2>
+            <p class="mb-8 text-gray-700">How do social class and secrets interact? Adjust the sliders to see the resulting social tension.</p>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold uppercase mb-2">Gatsby's Obsession with the Past</label>
+                    <input type="range" min="0" max="100" value="50" class="w-full accent-emerald-700" id="gatsby-slider" oninput="updateTension()">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold uppercase mb-2">Tom's Defensive Arrogance</label>
+                    <input type="range" min="0" max="100" value="50" class="w-full accent-red-700" id="tom-slider" oninput="updateTension()">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold uppercase mb-2">Daisy's Fear of Instability</label>
+                    <input type="range" min="0" max="100" value="50" class="w-full accent-yellow-600" id="daisy-slider" oninput="updateTension()">
+                </div>
+            </div>
+            <div class="mt-10 p-6 bg-gray-50 border border-gray-200 rounded text-center">
+                <span class="text-sm font-bold uppercase tracking-widest text-gray-500">Resulting Social Tension</span>
+                <div class="text-6xl font-bold mt-2" id="tension-score">LOW</div>
+                <p id="tension-desc" class="mt-4 text-gray-600 italic">"A pleasant afternoon at the yacht club."</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#1a1a1a] text-gray-500 py-8 text-center text-sm border-t border-[#d4af37]">
+        <p>&copy; 2024 Art Deco Digital Humanities | High School English Curriculum</p>
+    </footer>
+
+    <script>
+        const characterData = {
+            gatsby: {
+                name: "Jay Gatsby",
+                bio: "Born James Gatz, he reinvented himself to fit the image of a man Daisy could love.",
+                dynamics: ["Obsessively loves Daisy", "Views Nick as a gateway", "Despised by Tom"],
+                conflict: "The refusal to accept the reality of social class barriers."
+            },
+            daisy: {
+                name: "Daisy Buchanan",
+                bio: "A socialite of East Egg. Associated with money, voice, and fragility.",
+                dynamics: ["Bound to Tom by security", "Drawn to Gatsby's intensity", "Cousin to Nick"],
+                conflict: "The struggle between romantic impulse and status safety."
+            },
+            tom: {
+                name: "Tom Buchanan",
+                bio: "The 'Old Money' bully. Arrogant and physically dominant.",
+                dynamics: ["Cheats on Daisy with Myrtle", "Exposes Gatsby's origins", "Protects his hierarchy"],
+                conflict: "The violent preservation of his dominance."
+            },
+            nick: {
+                name: "Nick Carraway",
+                bio: "The narrator who claims to be 'one of the few honest people.'",
+                dynamics: ["Admires Gatsby's 'gift for hope'", "Dating Jordan Baker", "The bridge between worlds"],
+                conflict: "Observation vs. involvement in moral decay."
+            },
+            jordan: {
+                name: "Jordan Baker",
+                bio: "A pro-golfer who represents the 'New Woman' of the 20s.",
+                dynamics: ["Strategic dishonesty", "Cynical friend to Daisy", "Temporary interest for Nick"],
+                conflict: "Maintaining detached sophistication in a messy world."
+            },
+            myrtle: {
+                name: "Myrtle Wilson",
+                bio: "George Wilson's wife, desperate to escape her lower-class life.",
+                dynamics: ["Used by Tom", "Resents her husband", "Tragic cost of the wealthy"],
+                conflict: "The doomed attempt to cross class boundaries via association."
+            }
+        };
+
+        // --- Profiling Logic ---
+        function selectCharacter(id) {
+            const data = characterData[id];
+            document.getElementById('info-placeholder').classList.add('hidden');
+            document.getElementById('info-content').classList.remove('hidden');
+            document.getElementById('char-name').innerText = data.name;
+            document.getElementById('char-bio').innerText = data.bio;
+            document.getElementById('char-conflict').innerText = data.conflict;
+            const list = document.getElementById('char-dynamics');
+            list.innerHTML = "";
+            data.dynamics.forEach(dyn => {
+                const li = document.createElement('li');
+                li.innerText = dyn;
+                list.appendChild(li);
+            });
+            document.getElementById('relationship-info').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // --- Drag and Drop Logic ---
+        let draggedItem = null;
+        document.querySelectorAll('.draggable-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => { draggedItem = e.target; });
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => e.preventDefault());
+            zone.addEventListener('dragenter', (e) => e.target.classList.add('hover'));
+            zone.addEventListener('dragleave', (e) => e.target.classList.remove('hover'));
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.target.classList.remove('hover');
+                if (draggedItem) {
+                    e.target.innerText = draggedItem.innerText;
+                    e.target.classList.remove('correct-match', 'wrong-match');
+                }
+            });
+        });
+
+        function checkLabels() {
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                if (zone.innerText === zone.dataset.answer) {
+                    zone.classList.add('correct-match');
+                } else {
+                    zone.classList.add('wrong-match');
+                }
+            });
+        }
+
+        // --- Trait Matcher Logic ---
+        function matchTrait(name, isCorrect) {
+            const feedback = document.getElementById('trait-feedback');
+            if (isCorrect) {
+                feedback.innerText = "Correct! Tom says her voice is 'full of money.'";
+                feedback.className = "mt-6 text-center h-6 font-bold text-green-600";
+            } else {
+                feedback.innerText = "Not quite. Think about who represents the ultimate prize of wealth.";
+                feedback.className = "mt-6 text-center h-6 font-bold text-red-500";
+            }
+        }
+
+        // --- Tension Meter Logic ---
+        function updateTension() {
+            const g = parseInt(document.getElementById('gatsby-slider').value);
+            const t = parseInt(document.getElementById('tom-slider').value);
+            const d = parseInt(document.getElementById('daisy-slider').value);
+            const score = g + t + d;
+            const display = document.getElementById('tension-score');
+            const desc = document.getElementById('tension-desc');
+
+            if (score < 100) {
+                display.innerText = "LOW"; display.className = "text-6xl font-bold mt-2 text-green-600";
+                desc.innerText = "\"A pleasant afternoon at the yacht club.\"";
+            } else if (score < 200) {
+                display.innerText = "SIMMERING"; display.className = "text-6xl font-bold mt-2 text-yellow-600";
+                desc.innerText = "\"Awkward glances and heavy silence. The heat is stifling.\"";
+            } else {
+                display.innerText = "EXPLOSIVE"; display.className = "text-6xl font-bold mt-2 text-red-600";
+                desc.innerText = "\"The Plaza Hotel confrontation. The facade crumbles.\"";
+            }
+        }
+    </script>
+</body>
+</html>
